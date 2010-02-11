@@ -1,0 +1,24 @@
+name = "dyntype"
+version = "0.7"
+description = "Dynamic type and value introspection"
+
+package "value" (
+  name = "dyntype.value"
+  description = "Dynamic value introspection"
+  archive(byte) = "value.cmo"
+  archive(native) = "value.cmx"
+)
+
+package "type" (
+  name = "dyntype.type-of"
+  description = "Dynamic type introspection"
+  archive(byte) = "type.cmo"
+  archive(native) = "type.cmx"
+)
+
+package "syntax" (
+  name = "dyntype.syntax"
+  description = "Syntax extension for type and value introspection"
+  requires = "type-conv.syntax, camlp4, dyntype.value, dyntype.type"
+  archive(syntax, preprocessor) = "pa_dyntype.cma"
+)
