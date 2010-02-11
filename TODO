@@ -1,7 +1,0 @@
-Issues:
--------
-
-- Type-of/Value:
-   * handle type x = { x : M.t }
-   * handle type 'a x = {x : 'a }
-   * for Value, handle Bigint.t (and integers of range > 64)
