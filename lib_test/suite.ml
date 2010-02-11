@@ -2,7 +2,8 @@ open OUnit
 open Printf
 
 let suites = [
-  All.suite
+  Test_value.suite;
+  Test_type.suite;
 ]
 
 let _ =

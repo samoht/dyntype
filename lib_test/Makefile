@@ -1,21 +1,17 @@
-OCAMLMAKEFILE=../../OCamlMakefile
+OCAMLMAKEFILE=../OCamlMakefile
 ANNOTATE = yes
 
 .PHONY: run
 run: dc
 	./$(RESULT) -verbose
 
-.PHONY: slow
-slow: dc
-	env SLOW=1 ./$(RESULT) -verbose
-
-export LIBS = pa_value 
-export PACKS = unix oUnit
+PACKS = unix oUnit dyntype.value dyntype.syntax
+PREDS = camlp4o
 
 RESULT= run_test
-TESTS=  all
+TESTS=  test_value test_type
 
-SOURCES= ../value.ml $(TESTS:%=%.ml) suite.ml
+SOURCES= $(TESTS:%=%.ml) suite.ml
 
 pc_%:
 	$(MAKE) -f Makefile.debug $@
