@@ -41,7 +41,7 @@ let (<=>) n t =
   printf "%s: %s\n%!" n (Type.to_string (Type.of_string ts));
   ("EQ " ^ n) @? ( t = Type.of_string ts)
 
-let test_marshall () =
+let test_marshal () =
   "i1" <=> type_of_i1;
   "i2" <=> type_of_i2;
   "i3" <=> type_of_i3;
@@ -55,5 +55,5 @@ let test_marshall () =
   "o"  <=> type_of_o
 
 let suite = [
-  "all_f_marshall" >::  test_marshall
+  "type_marshal" >::  test_marshal
 ]

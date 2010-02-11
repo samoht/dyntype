@@ -31,7 +31,7 @@ open OUnit
 let _ = Random.self_init ()
 
 let char () = Char.chr (Random.int 25 + 97)
-let int () = Random.int max_int
+let int () = Random.int 10000000
 let int64 () = Random.int64 Int64.max_int
 let option v = if Random.int 4 = 0 then None else Some (v ())
 let float () = Random.float 1000000.
@@ -83,7 +83,7 @@ and tu ()  = ( int (), f (), pp ())
 
 let o () : o = object method x = f () method y = string () method z = (fun i -> string () ^ string_of_int i) end
 
-let test_marshall () =
+let test_marshal () =
 	for i = 1 to 200 do begin
 		let p = p () in
 		let pp = pp () in
@@ -109,5 +109,5 @@ let test_marshall () =
 	end done
 
 let suite = [
-	"all_f_marshall" >::  test_marshall
+	"value_marshal" >::  test_marshal
 ]
