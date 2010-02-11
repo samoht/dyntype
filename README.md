@@ -44,7 +44,7 @@ Types variables are handled by induction on the type structure in which they are
 
     let type_of_t = Ext ( "t", Option type_of_x)
 
-In this case, `type_of_x` has to be defined for the program to compile. This definition may have either been automatically generated previously by `typeof`, or have been defined by the user. The latter option makes the `typeof` library easily extensible, especially for abstract types.
+In this case, `type_of_x` has to be defined for the program to compile. This definition may have either been automatically generated previously by `type_of`, or have been defined by the user. The latter option makes the `type_of` library easily extensible, especially for abstract types.
 
 Recursive types
 ---------------
@@ -63,9 +63,7 @@ The following example shows the automatically generated code for simple recursiv
 Dynamic Values
 ==============
 
-The purpose of the `value` library is to make runtime value introspection available in OCaml. It works on any ML type definition annotated with the
-keyword `value` a pair of functions which marshall/unmarshall any value of that type into a simpler and well-defined ML value. Hence, for a given type `t`, the library generates two functions `value_of_t : t -> Value.t` and
-`t_of_value : Value.t -> t`, where `Value.t` is defined as:
+The purpose of the `value` library is to make runtime value introspection available in OCaml. It works on any ML type definition annotated with the keyword `value` a pair of functions which marshall/unmarshall any value of that type into a simpler and well-defined ML value. Hence, for a given type `t`, the library generates two functions `value_of_t : t -> Value.t` and `t_of_value : Value.t -> t`, where `Value.t` is defined as:
 
     module Value = struct
       type t =
