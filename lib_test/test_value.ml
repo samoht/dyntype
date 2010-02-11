@@ -1,6 +1,4 @@
-(*pp camlp4o -I .. -I `ocamlfind query type-conv` pa_type_conv.cmo pa_value.cma *)
-
-TYPE_CONV_PATH "All"
+TYPE_CONV_PATH "Value"
 
 type p =
 	| One of string * int array * char * bool * (float list)

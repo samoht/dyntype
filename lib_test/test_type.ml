@@ -1,6 +1,4 @@
-(*pp camlp4o -I .. -I `ocamlfind query type-conv` pa_type_conv.cmo pa_type.cma *)
-
-TYPE_CONV_PATH "All"
+TYPE_CONV_PATH "Type"
 open Printf
 
 type i1 = int32
