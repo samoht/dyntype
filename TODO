@@ -1,6 +1,3 @@
-Known issues and TODO list before a 1.0 release. Until then, the 
-ORM is a work-in-progress and anything is subject to change dramatically!
-
 Issues:
 -------
 
@@ -8,39 +5,3 @@ Issues:
    * handle type x = { x : M.t }
    * handle type 'a x = {x : 'a }
    * for Value, handle Bigint.t (and integers of range > 64)
-
-- ORM:
-   * signature generator
-   * handle type t = { x : M.t }
-   * handle type 'a t = { x : 'a }
-
-Interface changes:
------------------
-
-- Add a x_fold function to match the x_get function
-
-- Sqlite CONSTRAINT errors for uniqueness violations (e.g. on a unique
-  indexed field) need to be exposed better than just throwing up the 
-  CONSTRAINT error which is really hard to track down.
-
-Optimization:
-------------
-
-- Bind sqlite3_profile to make that information available.
-
-Nice to have:
-------------
-
-- A field name of "id" in a record will cause an error; type
-  checker should reject these or rewrite them into something different.
-
-- Warn on reserved keywords in types (id, from) which are not
-  valid SQL field names (or transform them to be safe).
-
-- Support polymorphic variant types and reference types.
-
-- Add foreign key constraints for sanity checking in debug mode.
-  Not strictly needed, but an additional integrity check
-
-- Generate smart ocamldoc; not sure if this is possible with camlp4
-  extensions without a custom doc generator.
