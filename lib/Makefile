@@ -11,7 +11,7 @@ all: bcl ncl
 	@ :
 
 install: all
-	$(SUDO) ocamlfind install dyntype META type.{o,cm{i,o,x}} value.{o,cm{i,o,x}} pa_dyntype.cma
+	$(SUDO) ocamlfind install dyntype META type.{o,cm{i,o,x}} value.{o,cm{i,o,x}} pa_dyntype.cma p4_type.cmi p4_value.cmi
 
 uninstall:
 	$(SUDO) ocamlfind remove dyntype
