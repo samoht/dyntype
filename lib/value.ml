@@ -64,12 +64,12 @@ let equal x y =
 	| Tuple i     , Tuple j     -> List.length i = List.length j && List.for_all (fun x -> x) (List.map2 (aux ids) i j)
 	| Dict i      , Dict j      ->
 		let fn a b = List.for_all (fun (n,i) -> List.exists (fun (m,j) -> n=m && (aux ids) i j) a) b in
-		fn i j && fn j i
+		fn i j
 	| Sum (n,i)   , Sum (m,j)   -> n=m && List.length i = List.length j && List.for_all (fun x -> x) (List.map2 (aux ids) i j)
 	| Null        , Null        -> true
 	| Value i     , Value j     -> aux ids i j
-	| Var (n,i)   , Var (m,j)   -> n=m && i = List.assoc j ids
-	| Rec((n,i),v), Rec((m,j),w)-> n=m && aux ( (j,i) :: ids ) v w
+	| Var (n,i)   , Var (m,j)   -> n=m && i = List.assoc (n, j) ids
+	| Rec((n,i),v), Rec((m,j),w)-> n=m && aux ( ((n,j), i) :: ids ) v w
 	| Arrow _     , Arrow _     -> true
 	| Ext((n,i),v), Ext((m,j),w)-> n=m && aux ids v w
 	| _                         -> false in
