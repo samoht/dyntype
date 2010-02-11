@@ -83,6 +83,18 @@ and tu ()  = ( int (), f (), pp ())
 
 let o () : o = object method x = f () method y = string () method z = (fun i -> string () ^ string_of_int i) end
 
+let check n f g x =
+	let v1 = f x in
+	let v2 = f (g v1) in
+	if not (Value.equal v1 v2) then begin
+	  Printf.printf "%s(v1): %s\n%!" n (Value.to_string v1);
+	  Printf.printf "%s(v2): %s\n%!" n (Value.to_string v2);
+	end;
+	("EQ " ^ n) @? (Value.equal v1 v2)
+  
+let check_syntax n f g x =
+	("EQ " ^ n) @? ( ignore (f (g (f x))); true )
+
 let test_marshal () =
 	for i = 1 to 200 do begin
 		let p = p () in
@@ -92,20 +104,13 @@ let test_marshal () =
 		let f = f () in
 		let tu = tu () in
 		let o = o () in
-(*                Printf.printf "p=%s\n%!" (Value.to_string (value_of_p p));
-                Printf.printf "pp=%s\n%!" (Value.to_string (value_of_pp pp));
-                Printf.printf "t=%s\n%!" (Value.to_string (value_of_t t));
-                Printf.printf "x=%s\n%!" (Value.to_string (value_of_x x));
-                Printf.printf "f=%s\n%!" (Value.to_string (value_of_f f));
-                Printf.printf "tu=%s\n%!" (Value.to_string (value_of_tu tu));
-                Printf.printf "o=%s\n%!" (Value.to_string (value_of_o o)); *)
-		"EQ p" @? (value_of_p p = value_of_p (p_of_value (value_of_p p)));
-		"EQ pp" @? (value_of_pp pp = value_of_pp (pp_of_value (value_of_pp pp)));
-		"EQ t" @? (value_of_t t = value_of_t (t_of_value (value_of_t t)));
-		"EQ x" @? (value_of_x x = value_of_x (x_of_value (value_of_x x))); 
-		"EQ f" @? (value_of_f f = value_of_f (f_of_value (value_of_f f)));
-		"EQ tu" @? (value_of_tu tu = value_of_tu (tu_of_value (value_of_tu tu)));
-		"EQ o" @? (ignore( value_of_o (o_of_value (value_of_o o))); true); (* Marshaled functions cannot be compared *)
+		check "p" value_of_p p_of_value p;
+		check "pp" value_of_pp pp_of_value pp;
+		check "t" value_of_t t_of_value t;
+		check "x" value_of_x x_of_value x;
+		check "f" value_of_f f_of_value f;
+		check "tu" value_of_tu tu_of_value tu;
+		check_syntax "o" value_of_o o_of_value o
 	end done
 
 let suite = [
