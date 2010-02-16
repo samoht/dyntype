@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Value.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Value" rel="Chapter" href="Value.html">
+<link title="Type" rel="Chapter" href="Type.html"><link title="Utility functions" rel="Section" href="#2_Utilityfunctions">
+<link title="Sub-typing" rel="Section" href="#2_Subtyping">
+<link title="Pretty-printing" rel="Section" href="#2_Prettyprinting">
+<title>Type</title>
+</head>
+<body>
+<div class="navbar"><a href="Value.html">Previous</a>
+&nbsp;<a href="index.html">Up</a>
+&nbsp;</div>
+<center><h1>Module <a href="type_Type.html">Type</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Type: <code class="code">sig</code> <a href="Type.html">..</a> <code class="code">end</code></pre>Dynamic types<br>
+<hr width="100%">
+<br><code><span class="keyword">type</span> <a name="TYPEt"></a><code class="type"></code>t = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Unit</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >unit</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Bool</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >booleans</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Float</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >floating-point numbers</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Char</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >characters</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">String</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >strings</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Int</span> <span class="keyword">of</span> <code class="type">int option</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >integer type of a given size (as 31-,32- or 64-bits); <code class="code">Int None</code> is for bigints</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Enum</span> <span class="keyword">of</span> <code class="type"><a href="Type.html#TYPEt">t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >collection of stuff of the same type (as lists or arrays)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Tuple</span> <span class="keyword">of</span> <code class="type"><a href="Type.html#TYPEt">t</a> list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Cartesian product</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Dict</span> <span class="keyword">of</span> <code class="type">(string * [ `RO | `RW ] * <a href="Type.html#TYPEt">t</a>) list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >record or object type; <code class="code">`RW</code> stands for mutable fields</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Sum</span> <span class="keyword">of</span> <code class="type">(string * <a href="Type.html#TYPEt">t</a> list) list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >variant type</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Option</span> <span class="keyword">of</span> <code class="type"><a href="Type.html#TYPEt">t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >option type</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Rec</span> <span class="keyword">of</span> <code class="type">string * <a href="Type.html#TYPEt">t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >recursive type</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Var</span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >recursive fix-point</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Arrow</span> <span class="keyword">of</span> <code class="type"><a href="Type.html#TYPEt">t</a> * <a href="Type.html#TYPEt">t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >arrow type</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">Ext</span> <span class="keyword">of</span> <code class="type">string * <a href="Type.html#TYPEt">t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >type variable</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+<br>
+<a name="2_Utilityfunctions"></a>
+<h2>Utility functions</h2><br>
+<pre><span class="keyword">val</span> <a name="VALis_mutable"></a>is_mutable : <code class="type"><a href="Type.html#TYPEt">t</a> -> bool</code></pre><div class="info">
+<code class="code">is_mutable t</code> checks whether <code class="code">t</code> contains a mutable field<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfree_vars"></a>free_vars : <code class="type"><a href="Type.html#TYPEt">t</a> -> string list</code></pre><div class="info">
+<code class="code">free_vars t</code> returns all the free variables of type <code class="code">t</code>.
+	If <code class="code">t</code> is unfolded (as it should be when calling <code class="code">type_of_t</code>,
+	this call should return an empty list.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALforeigns"></a>foreigns : <code class="type"><a href="Type.html#TYPEt">t</a> -> string list</code></pre><div class="info">
+<code class="code">foreigns t</code> returns all the type variables appearing in <code class="code">t</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALunroll"></a>unroll : <code class="type">(string * <a href="Type.html#TYPEt">t</a>) list -> <a href="Type.html#TYPEt">t</a> -> <a href="Type.html#TYPEt">t</a></code></pre><div class="info">
+<code class="code">unroll env t</code> replaces every type appearing in <code class="code">t</code> by its type value defined in <code class="code">env</code>.<br>
+</div>
+<br>
+<a name="2_Subtyping"></a>
+<h2>Sub-typing</h2><br>
+<pre><span class="keyword">val</span> <a name="VALis_subtype_of"></a>is_subtype_of : <code class="type"><a href="Type.html#TYPEt">t</a> -> <a href="Type.html#TYPEt">t</a> -> bool</code></pre><div class="info">
+<code class="code">is_subtype_of s t</code> checks whether <code class="code">s</code> is a sub-type of <code class="code">t</code>. Sub-typing relation is based on
+	naming. Basically, <code class="code">s</code> is a sub-type of <code class="code">t</code> if (i) named attributes have either compatible types
+	(ii) or some fields/methods defined in <code class="code">t</code> do not appear in <code class="code">s</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VAL(<:)"></a>(&lt;:) : <code class="type"><a href="Type.html#TYPEt">t</a> -> <a href="Type.html#TYPEt">t</a> -> bool</code></pre><div class="info">
+<code class="code">s &lt;: t</code> is a short-cut for <code class="code">is_subtype_of s t</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALstring_of_last_type_error"></a>string_of_last_type_error : <code class="type">unit -> string</code></pre><div class="info">
+Returns the more recent failing sub-type relation tested by <code class="code">(&lt;:)</code> or <code class="code">is_subtype_of</code><br>
+</div>
+<br>
+<a name="2_Prettyprinting"></a>
+<h2>Pretty-printing</h2><br>
+<pre><span class="keyword">val</span> <a name="VALto_string"></a>to_string : <code class="type"><a href="Type.html#TYPEt">t</a> -> string</code></pre><div class="info">
+<code class="code">to_string t</code> pretty-prints the type <code class="code">t</code><br>
+</div>
+<pre><span class="keyword">exception</span> <a name="EXCEPTIONParse_error"></a>Parse_error <span class="keyword">of</span> <code class="type">string</code></pre>
+<div class="info">
+Exception that may be raised by <code class="code">!of_string</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALof_string"></a>of_string : <code class="type">string -> <a href="Type.html#TYPEt">t</a></code></pre><div class="info">
+<code class="code">of_string str</code> returns the type <code class="code">t</code> corresponding to the pretty-printed string <code class="code">str</code>. Raises <code class="code">!Parse_error</code>
+	if is not a valid string<br>
+</div>
+</body></html>
