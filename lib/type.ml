@@ -1,5 +1,5 @@
 (*
- * Copyright (c) 2009 Thomas Gazagnaire <thomas@gazagnaire.com>
+ * Copyright (c) 2009-2010 Thomas Gazagnaire <thomas@gazagnaire.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -176,8 +176,6 @@ let is_subtype_of (t1:t) (t2:t) =
   t1 <: t2
 
 let (<:) = is_subtype_of
-
-exception Subtype_error of string * string
 
 let index_par c s =
   let res = ref None in
