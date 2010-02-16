@@ -1,5 +1,5 @@
 (*
- * Copyright (c) 2009 Thomas Gazagnaire <thomas@gazagnaire.com>
+ * Copyright (c) 2009-2010 Thomas Gazagnaire <thomas@gazagnaire.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,9 +30,9 @@ type t =
 	| Sum of string * t list
 	| Null
 	| Value of t
-	| Var of (string * int64)
-	| Rec of (string * int64) * t
 	| Arrow of string
+	| Rec of (string * int64) * t
+	| Var of (string * int64)
 	| Ext of (string * int64) * t
 
 (* If there are still some Var v, then the type is recursive for the type v *)
