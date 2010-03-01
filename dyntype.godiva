@@ -1,5 +1,5 @@
 Package: godi-dyntype
-Version: 0.7
+Version: 0.7.1
 Revision: 0
 Depends: godi-ocaml (>= 3.11), godi-type-conv (>= 1.6.10)
 Build-Depends: godi-findlib (>= 1.2.5)
