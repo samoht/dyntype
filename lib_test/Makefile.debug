@@ -1,8 +1,8 @@
 # Makefile to build and run the test files in a variety of ways
 
-P4INC := -I `ocamlfind query type-conv` -I .. pa_type_conv.cmo pa_value.cma
-BINC := -I .. pa_value.cma
-NINC := -I .. pa_value.cmx
+P4INC := -I `ocamlfind query type-conv` -I ../lib pa_type_conv.cmo pa_dyntype.cma
+BINC := -I ../lib pa_dyntype.cma
+NINC := -I ../lib pa_dyntype.cmx
 
 PACKS= -package unix,oUnit
 
