@@ -1,5 +1,5 @@
 name = "dyntype"
-version = "0.7.1"
+version = "0.7.2"
 description = "Dynamic type and value introspection"
 
 package "value" (
