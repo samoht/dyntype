@@ -16,6 +16,12 @@ install: all
 		value.o value.cmi value.cmo value.cmx \
 		pa_dyntype.cma p4_type.cmi p4_value.cmi
 
+java:
+	ocamljava -I +camlp4 -c value.mli value.ml type.mli type.ml
+
+javainstall:
+	cp value.cmj value.jo type.cmj type.jo $(shell ocamlfind printconf path)/dyntype/
+
 uninstall:
 	$(SUDO) ocamlfind remove dyntype
 
