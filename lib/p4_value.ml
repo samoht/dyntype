@@ -384,7 +384,7 @@ module Of_value = struct
 			let exprs = List.map2 (fun id (n, ctyp) -> <:rec_binding< $lid:n$ = $create names id ctyp$ >>) ids fields in
 			let bindings =
 				List.map2 (fun pid (n, ctyp) ->
-					<:binding< $pid$ = try List.assoc $str:n$ $nid$ with [ $runtime_exn_error nid ("Looking for key "^n)$ ] >>
+					<:binding< $pid$ = try List.assoc $str:n$ $nid$ with _ -> V.Null >>
 					) pids fields in
 			<:expr< match $id$ with
 				[ V.Dict $npid$ -> let $biAnd_of_list bindings$ in { $rbSem_of_list exprs$ } | $runtime_error id "Dict"$ ]
