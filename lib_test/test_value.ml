@@ -86,11 +86,11 @@ let o () : o = object method x = f () method y = string () method z = (fun i -> 
 let check n f g x =
 	let v1 = f x in
 	let v2 = f (g v1) in
-	if not (Value.equal v1 v2) then begin
+	if not (v1 = v2) then begin
 		Printf.printf "%s(v1): %s\n%!" n (Value.to_string v1);
 		Printf.printf "%s(v2): %s\n%!" n (Value.to_string v2);
 	end;
-	("EQ " ^ n) @? (Value.equal v1 v2)
+	("EQ " ^ n) @? (v1 = v2)
   
 let check_syntax n f g x =
 	("EQ " ^ n) @? ( ignore (f (g (f x))); true )
