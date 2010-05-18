@@ -1,9 +1,6 @@
 0.7.2:
 
-<<<<<<< HEAD
 * Improve the way to customize ID generation [18 May 2010]
-=======
->>>>>>> 2ef68eaa54b04c60e2097ac564c120c20d4c3751
 * Better support for missing values that map to option types [20 Apr 2010]
 
 0.7.1:
