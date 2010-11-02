@@ -32,7 +32,11 @@ let list_of_ctyp_decl tds =
   | _                               ->  failwith "list_of_ctyp_decl: unexpected type"
   in aux [] tds
 
-exception Type_not_supported of ctyp
+let type_not_supported ctyp =
+  let module PP = Camlp4.Printers.OCaml.Make(Syntax) in
+  let pp = new PP.printer () in
+  Format.eprintf "Type %a@. not supported\n" pp#ctyp ctyp;
+  failwith "type not supported by DynType"
 
 (* For each type declaration in tds, returns the corresponding unrolled Type.t.        *)
 (* The remaining free variables in the type corresponds to external type declarations. *)
@@ -79,7 +83,7 @@ let create tds : (loc * string * t) list =
 	  | <:ctyp< $t$ -> $u$ >>   -> Arrow ( (aux bound_vars t), (aux bound_vars u) )
     | <:ctyp< $lid:id$ >> when not (exists id) || List.mem id bound_vars -> Var id
     | <:ctyp< $lid:id$ >>     -> apply id (id :: bound_vars)
-    | x                       -> raise (Type_not_supported x) in
+    | x                       -> type_not_supported x in
 
   let ctyps = list_of_ctyp_decl tds in
   List.iter (fun (loc, name, ctyp) -> register name (fun bound_vars -> aux bound_vars ctyp)) ctyps;
