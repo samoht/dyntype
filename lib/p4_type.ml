@@ -109,7 +109,7 @@ let gen tds =
     | Sum ts     -> 
       let rec fn accu = function
       | []          -> accu
-      | (n, t) :: l -> <:expr< [ ( $str:n$, $List.fold_left (fun accu x -> <:expr< [ $aux x$ :: $accu$ ] >>) <:expr< [] >> t$ ) :: $fn accu l$ ] >> in
+      | (n, t) :: l -> <:expr< [ ( $str:n$, $List.fold_left (fun accu x -> <:expr< [ $aux x$ :: $accu$ ] >>) <:expr< [] >> (List.rev t)$ ) :: $fn accu l$ ] >> in
       <:expr< T.Sum $fn <:expr< [] >> (List.rev ts)$ >>
     | Dict ts    ->
       let rec fn accu = function
