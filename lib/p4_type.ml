@@ -70,13 +70,13 @@ let create tds : (loc * string * t) list =
           | _ -> failwith "unexpected AST" in
         Sum (fn [] variants)
     | <:ctyp< { $fields$ } >> | <:ctyp< < $fields$ > >> ->
-	let rec fn accu = function
+	    let rec fn accu = function
           | <:ctyp< $t1$; $t2$ >>             -> fn (fn accu t1) t2
           | <:ctyp< $lid:id$ : mutable $t$ >> -> (id, `RW, aux bound_vars t) :: accu
           | <:ctyp< $lid:id$ : $t$ >>         -> (id, `RO, aux bound_vars t) :: accu
           | _                                 -> failwith "unexpected AST" in
         Dict (fn []  fields)
-	| <:ctyp< $t$ -> $u$ >>   -> Arrow ( (aux bound_vars t), (aux bound_vars u) )
+	  | <:ctyp< $t$ -> $u$ >>   -> Arrow ( (aux bound_vars t), (aux bound_vars u) )
     | <:ctyp< $lid:id$ >> when not (exists id) || List.mem id bound_vars -> Var id
     | <:ctyp< $lid:id$ >>     -> apply id (id :: bound_vars)
     | x                       -> raise (Type_not_supported x) in
