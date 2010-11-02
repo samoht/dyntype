@@ -25,6 +25,26 @@ open Type
 
 let type_of t = "type_of_" ^ t
 
+let split str sep =
+  let rec split_rec pos =
+    if pos >= String.length str then [] else begin
+      try
+        let newpos = String.index_from str pos sep in
+        String.sub str pos (newpos - pos) :: split_rec (newpos + 1)
+      with Not_found ->
+        [String.sub str pos (String.length str - pos)]
+    end in
+  split_rec 0
+
+let ident_type_of _loc t =
+  match List.rev (split t '.') with
+  | []               -> assert false
+  | [m]              -> <:expr< $lid:type_of m$ >>
+  | last :: rev_rest ->
+    let id_last = type_of last in
+    let id_rev_rest = List.map (fun x -> <:ident< $uid:x$ >>) rev_rest in
+    <:expr< $id:Ast.idAcc_of_list (List.rev id_rev_rest)$.$lid:id_last$ >>
+
 let list_of_ctyp_decl tds =
   let rec aux accu = function
   | Ast.TyAnd (loc, tyl, tyr)      -> aux (aux accu tyl) tyr
@@ -37,6 +57,13 @@ let type_not_supported ctyp =
   let pp = new PP.printer () in
   Format.eprintf "Type %a@. not supported\n" pp#ctyp ctyp;
   failwith "type not supported by DynType"
+
+let append _loc modules id =
+  let rec aux = function
+    | <:ident< $uid:n$>>      -> [n]
+    | <:ident< $m$.$uid:n$ >> -> n :: aux m
+    | _ -> assert false in
+  String.concat "." (List.rev (id :: aux modules))
 
 (* For each type declaration in tds, returns the corresponding unrolled Type.t.        *)
 (* The remaining free variables in the type corresponds to external type declarations. *)
@@ -83,6 +110,7 @@ let create tds : (loc * string * t) list =
 	  | <:ctyp< $t$ -> $u$ >>   -> Arrow ( (aux bound_vars t), (aux bound_vars u) )
     | <:ctyp< $lid:id$ >> when not (exists id) || List.mem id bound_vars -> Var id
     | <:ctyp< $lid:id$ >>     -> apply id (id :: bound_vars)
+    | <:ctyp@loc< $id:m$.$lid:id$ >> -> Var (append loc m id)
     | x                       -> type_not_supported x in
 
   let ctyps = list_of_ctyp_decl tds in
@@ -96,10 +124,10 @@ let gen tds =
     let freev = free_vars t in
     let rec aux = function
     | Var v when List.mem v freev
-                 -> <:expr< $lid:type_of v$ >>
+                 -> <:expr< $ident_type_of _loc v$ >>
     | Var v      -> <:expr< T.Var $str:v$ >>
-    | Rec (v, t) -> <:expr< T.Rec ($str:v$, $aux t$) >>
-    | Ext (v, t) -> <:expr< T.Ext ($str:v$, $aux t$) >>
+    | Rec (v, t) -> <:expr< T.Rec $str:v$ $aux t$ >>
+    | Ext (v, t) -> <:expr< T.Ext $str:v$ $aux t$ >>
     | Unit       -> <:expr< T.Unit >>
     | Int None   -> <:expr< T.Int None >>
     | Int (Some n) -> <:expr< T.Int (Some $`int:n$) >>
