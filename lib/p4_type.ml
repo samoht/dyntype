@@ -41,7 +41,7 @@ let gen_ident _loc gen t =
   | []               -> assert false
   | [m]              -> <:expr< $lid:gen m$ >>
   | last :: rev_rest ->
-    let id_last = type_of last in
+    let id_last = gen last in
     let id_rev_rest = List.map (fun x -> <:ident< $uid:x$ >>) rev_rest in
     <:expr< $id:Ast.idAcc_of_list (List.rev id_rev_rest)$.$lid:id_last$ >>
 
