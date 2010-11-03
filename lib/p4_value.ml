@@ -21,6 +21,7 @@
 open Camlp4
 open PreCast
 open Ast
+open P4_helpers
 
 let value_of n = "value_of_" ^ n
 let of_value n = n ^ "_of_value"
@@ -52,26 +53,6 @@ let rec decompose_fields _loc fields =
 	| <:ctyp< $lid:field_name$: mutable $t$ >> | <:ctyp< $lid:field_name$: $t$ >> ->
 		[ field_name, t ]
 	| _ -> failwith "unexpected type while processing fields"
-
-let expr_list_of_list _loc exprs =
-	match List.rev exprs with
-	| []   -> <:expr< [] >>
-	| h::t -> List.fold_left (fun accu x -> <:expr< [ $x$ :: $accu$ ] >>) <:expr< [ $h$ ] >> t 
-
-let patt_list_of_list _loc patts =
-	match List.rev patts with
-	| []   -> <:patt< [] >>
-	| h::t -> List.fold_left (fun accu x -> <:patt< [ $x$ :: $accu$ ] >>) <:patt< [ $h$ ] >> t
-
-let expr_tuple_of_list _loc = function
-	| []   -> <:expr< >>
-	| [x]  -> x
-	| h::t -> ExTup (_loc, List.fold_left (fun accu n -> <:expr< $accu$, $n$ >>) h t)
-
-let patt_tuple_of_list _loc = function
-	| []   -> <:patt< >>
-	| [x]  -> x
-	| h::t -> PaTup (_loc, List.fold_left (fun accu n -> <:patt< $accu$, $n$ >>) h t)
 
 let decompose_variants _loc variant =
 	let rec fn accu = function
