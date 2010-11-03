@@ -25,7 +25,7 @@ type t =
 	| List of t (** collection of stuff of the same type (stored as lists) *)
   | Array of t (** collection of stuff of the same type (stored as arrays) *)
 	| Tuple of t list (** Cartesian product *)
-	| Dict of (string * [ `RO | `RW ] * t) list (** record or object type; [`RW] stands for mutable fields *)
+	| Dict of [`R|`O] * (string * [ `RO | `RW ] * t) list (** record ['R] or object ['O] type; [`RW] stands for mutable fields *)
 	| Sum of (string * t list) list (** variant type *)
 	| Option of t (** option type *)
 	| Rec of string * t (** recursive type *)
