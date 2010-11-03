@@ -36,10 +36,10 @@ let split str sep =
     end in
   split_rec 0
 
-let ident_type_of _loc t =
+let gen_ident _loc gen t =
   match List.rev (split t '.') with
   | []               -> assert false
-  | [m]              -> <:expr< $lid:type_of m$ >>
+  | [m]              -> <:expr< $lid:gen m$ >>
   | last :: rev_rest ->
     let id_last = type_of last in
     let id_rev_rest = List.map (fun x -> <:ident< $uid:x$ >>) rev_rest in
@@ -124,7 +124,7 @@ let gen tds =
     let freev = free_vars t in
     let rec aux = function
     | Var v when List.mem v freev
-                 -> <:expr< $ident_type_of _loc v$ >>
+                 -> <:expr< $gen_ident _loc type_of v$ >>
     | Var v      -> <:expr< T.Var $str:v$ >>
     | Rec (v, t) -> <:expr< T.Rec $str:v$ $aux t$ >>
     | Ext (v, t) -> <:expr< T.Ext $str:v$ $aux t$ >>
