@@ -84,6 +84,14 @@ let list_of_sum fn variants =
     | _ -> failwith "unexpected AST" in
   aux [] variants
 
+let rec is_polymorphic = function
+  | <:ctyp< $t1$ | $t2$ >>    -> is_polymorphic t1 || is_polymorphic t2
+  | <:ctyp< `$uid:_$ of $_$ >>
+  | <:ctyp< `$uid:_$ >>        -> true
+  | <:ctyp< $uid:_$ of $_$ >>
+  | <:ctyp< $uid:_$ >>        -> false
+  | _ -> assert false
+
 (* For each type declaration in tds, returns the corresponding unrolled Type.t.  *)
 (* The remaining free variables in the type corresponds to external type         *)
 (* declarations.                                                                 *)
@@ -112,7 +120,9 @@ let create tds : (loc * string * t) list =
     | <:ctyp< [< $variants$] >> 
     | <:ctyp< [> $variants$] >>
     | <:ctyp< [= $variants$] >> 
-    | <:ctyp< [$variants$] >> -> Sum (list_of_sum same_aux variants)
+    | <:ctyp< [$variants$] >> ->
+      let kind = if is_polymorphic variants then `P else `N in
+      Sum (kind, list_of_sum same_aux variants)
     | <:ctyp< { $fields$ } >> -> Dict (`R, list_of_fields same_aux fields)
     | <:ctyp< < $fields$ > >> -> Dict (`O, list_of_fields same_aux fields)
 	  | <:ctyp< $t$ -> $u$ >>   -> Arrow (same_aux t, same_aux u)
@@ -133,18 +143,20 @@ let meta_field _loc fn = function
   | (n, `RO, t) -> <:expr< ($str:n$, `RO, $fn t$) >>
 
 let meta_dict _loc fn (t,tl) =
+  let kind = match t with `R -> <:expr< `R >> | `O -> <:expr< `O >> in
   let tl = List.map (meta_field _loc fn) tl in
   match t with
-  | `R -> <:expr< T.Dict `R $expr_list_of_list _loc tl$ >>
-  | `O -> <:expr< T.Dict `O $expr_list_of_list _loc tl$ >>
+  | `R -> <:expr< T.Dict $kind$ $expr_list_of_list _loc tl$ >>
+  | `O -> <:expr< T.Dict $kind$ $expr_list_of_list _loc tl$ >>
 
 let meta_variant _loc fn (n, tl) =
   let tl = List.map fn tl in
   <:expr< ($str:n$, $expr_list_of_list _loc tl$) >>
 
-let meta_sum _loc fn ts =
+let meta_sum _loc fn (t,ts) =
+  let kind = match t with `P -> <:expr< `P >> | `N -> <:expr< `N >> in
   let ts = List.map (meta_variant _loc fn) ts in
-  <:expr< T.Sum $expr_list_of_list _loc ts$ >>
+  <:expr< T.Sum $kind$ $expr_list_of_list _loc ts$ >>
 
 let meta_tuple _loc fn tl =
   let tl = List.map fn tl in
@@ -172,7 +184,7 @@ let gen tds =
     | Tuple tl   -> meta_tuple _loc aux tl
     | List t     -> <:expr< T.List $aux t$ >>
     | Array t    -> <:expr< T.Array $aux t$ >>
-    | Sum ts     -> meta_sum _loc aux ts
+    | Sum (t,ts) -> meta_sum _loc aux (t,ts)
     | Dict(t,ts) -> meta_dict _loc aux (t,ts)
     | Arrow(t,s) -> <:expr< T.Arrow $aux t$ $aux s$ >>
     in
