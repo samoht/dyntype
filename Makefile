@@ -10,7 +10,7 @@ test: all
 	$(MAKE) -C lib_test/ run
 
 .PHONY: install
-install: all
+install:
 	$(MAKE) -C lib/ install
 
 .PHONY: uninstall
