@@ -120,7 +120,7 @@ let rec to_string t = match t with
   | Char       -> "C"
   | String     -> "S"
   | List t     -> sprintf "[%s]" (to_string t)
-  | Array t    -> sprintf "!%s?" (to_string t)
+  | Array t    -> sprintf "!%s|" (to_string t)
   | Tuple ts   -> sprintf "(%s)" (map_strings "*" to_string ts)
   | Dict(`R,ts)-> sprintf "{R%s}" (map_strings "*" (fun (s,m,t) -> sprintf "%s:%s:%s" s (if m = `RO then "I" else "M") (to_string t)) ts)
   | Dict(`O,ts)-> sprintf "{O%s}" (map_strings "*" (fun (s,m,t) -> sprintf "%s:%s:%s" s (if m = `RO then "I" else "M") (to_string t)) ts)
@@ -192,7 +192,7 @@ let index_par c s =
   let n = String.length s in
   while !res = None && !i < n do
     if s.[!i] = '(' || s.[!i] = '[' || s.[!i] = '{' || s.[!i] = '<' || s.[!i] = '!' then incr par;
-    if s.[!i] = ')' || s.[!i] = ']' || s.[!i] = '}' || s.[!i] = '>' || s.[!i] = '?' then decr par;
+    if s.[!i] = ')' || s.[!i] = ']' || s.[!i] = '}' || s.[!i] = '>' || s.[!i] = '|' then decr par;
     if !par = 0 && s.[!i] = c then res := Some !i;
     incr i
   done;
@@ -233,7 +233,7 @@ let rec of_string s : t  = match s.[0] with
     List (of_string s)
   | '!' ->
     let s = String.sub s 1 (String.length s - 2) in
-    List (of_string s)
+    Array (of_string s)
   | '(' ->
     let s = String.sub s 1 (String.length s - 2) in
     let ss = split_par '*' s in
