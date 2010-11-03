@@ -20,6 +20,7 @@
 open Camlp4
 open PreCast
 open Ast
+open P4_helpers
 
 open Type
 
@@ -65,8 +66,27 @@ let append _loc modules id =
     | _ -> assert false in
   String.concat "." (List.rev (id :: aux modules))
 
-(* For each type declaration in tds, returns the corresponding unrolled Type.t.        *)
-(* The remaining free variables in the type corresponds to external type declarations. *)
+let list_of_fields fn fields =
+  let rec aux accu = function
+    | <:ctyp< $t1$; $t2$ >>             -> aux (aux accu t1) t2
+    | <:ctyp< $lid:id$ : mutable $t$ >> -> (id, `RW, fn t) :: accu
+    | <:ctyp< $lid:id$ : $t$ >>         -> (id, `RO, fn t) :: accu
+    | _                                 -> failwith "unexpected AST" in
+  aux [] fields
+
+let list_of_sum fn variants =
+  let rec aux accu = function
+    | <:ctyp< $t1$ | $t2$ >>     -> aux (aux accu t1) t2
+    | <:ctyp< `$uid:id$ of $t$ >>
+    | <:ctyp< $uid:id$ of $t$ >> -> (id, List.map fn (list_of_ctyp t [])) :: accu
+    | <:ctyp< `$uid:id$ >>
+    | <:ctyp< $uid:id$ >>        -> (id, []) :: accu
+    | _ -> failwith "unexpected AST" in
+  aux [] variants
+
+(* For each type declaration in tds, returns the corresponding unrolled Type.t.  *)
+(* The remaining free variables in the type corresponds to external type         *)
+(* declarations.                                                                 *)
 let create tds : (loc * string * t) list =
   let bind v t = if List.mem v (free_vars t) then Rec (v, t) else Ext (v, t) in
   let tablefn = Hashtbl.create 16 in
@@ -75,6 +95,7 @@ let create tds : (loc * string * t) list =
   let exists name = Hashtbl.mem tablefn name in
 
   let rec aux bound_vars ctyp =
+    let same_aux = aux (bound_vars) in
     match ctyp with
     | <:ctyp< unit >>         -> Unit
     | <:ctyp< int >>          -> Int (Some (Sys.word_size - 1))
@@ -84,38 +105,50 @@ let create tds : (loc * string * t) list =
     | <:ctyp< bool >>         -> Bool
     | <:ctyp< char >>         -> Char
     | <:ctyp< string >>       -> String
-    | <:ctyp< option $ty$ >>  -> Option (aux bound_vars ty)
-    | <:ctyp< ( $tup:tp$ ) >> -> Tuple (List.map (aux bound_vars) (list_of_ctyp tp []))
-    | <:ctyp< list $ctyp$ >>  -> List (aux bound_vars ctyp)
-    | <:ctyp< array $ctyp$ >> -> Array (aux bound_vars ctyp)
-    | <:ctyp< [< $variants$ ] >> 
-    | <:ctyp< [> $variants$ ] >>
-    | <:ctyp< [= $variants$ ] >> 
-    | <:ctyp< [ $variants$ ] >> ->
-        let rec fn accu = function
-          | <:ctyp< $t1$ | $t2$ >>     -> fn (fn accu t1) t2
-          | <:ctyp< `$uid:id$ of $t$ >>
-          | <:ctyp< $uid:id$ of $t$ >> -> (id, List.map (aux bound_vars) (list_of_ctyp t [])) :: accu
-          | <:ctyp< `$uid:id$ >>
-          | <:ctyp< $uid:id$ >>        -> (id, []) :: accu
-          | _ -> failwith "unexpected AST" in
-        Sum (fn [] variants)
-    | <:ctyp< { $fields$ } >> | <:ctyp< < $fields$ > >> ->
-	    let rec fn accu = function
-          | <:ctyp< $t1$; $t2$ >>             -> fn (fn accu t1) t2
-          | <:ctyp< $lid:id$ : mutable $t$ >> -> (id, `RW, aux bound_vars t) :: accu
-          | <:ctyp< $lid:id$ : $t$ >>         -> (id, `RO, aux bound_vars t) :: accu
-          | _                                 -> failwith "unexpected AST" in
-        Dict (fn []  fields)
-	  | <:ctyp< $t$ -> $u$ >>   -> Arrow ( (aux bound_vars t), (aux bound_vars u) )
-    | <:ctyp< $lid:id$ >> when not (exists id) || List.mem id bound_vars -> Var id
+    | <:ctyp< option $ty$ >>  -> Option (same_aux ty)
+    | <:ctyp< ( $tup:tp$ ) >> -> Tuple (List.map same_aux (list_of_ctyp tp []))
+    | <:ctyp< list $ctyp$ >>  -> List (same_aux ctyp)
+    | <:ctyp< array $ctyp$ >> -> Array (same_aux ctyp)
+    | <:ctyp< [< $variants$] >> 
+    | <:ctyp< [> $variants$] >>
+    | <:ctyp< [= $variants$] >> 
+    | <:ctyp< [$variants$] >> -> Sum (list_of_sum same_aux variants)
+    | <:ctyp< { $fields$ } >> -> Dict (`R, list_of_fields same_aux fields)
+    | <:ctyp< < $fields$ > >> -> Dict (`O, list_of_fields same_aux fields)
+	  | <:ctyp< $t$ -> $u$ >>   -> Arrow (same_aux t, same_aux u)
+    | <:ctyp< $lid:id$ >> when not (exists id) || List.mem id bound_vars
+                              -> Var id
     | <:ctyp< $lid:id$ >>     -> apply id (id :: bound_vars)
     | <:ctyp@loc< $id:m$.$lid:id$ >> -> Var (append loc m id)
     | x                       -> type_not_supported x in
 
   let ctyps = list_of_ctyp_decl tds in
-  List.iter (fun (loc, name, ctyp) -> register name (fun bound_vars -> aux bound_vars ctyp)) ctyps;
+  List.iter
+    (fun (loc, name, ctyp) -> register name (fun bound_vars -> aux bound_vars ctyp))
+    ctyps;
   List.map (fun (loc, name, ctyp) -> loc, name, apply name [name]) ctyps
+
+let meta_field _loc fn = function
+  | (n, `RW, t) -> <:expr< ($str:n$, `RW, $fn t$) >>
+  | (n, `RO, t) -> <:expr< ($str:n$, `RO, $fn t$) >>
+
+let meta_dict _loc fn (t,tl) =
+  let tl = List.map (meta_field _loc fn) tl in
+  match t with
+  | `R -> <:expr< T.Dict `R $expr_list_of_list _loc tl$ >>
+  | `O -> <:expr< T.Dict `O $expr_list_of_list _loc tl$ >>
+
+let meta_variant _loc fn (n, tl) =
+  let tl = List.map fn tl in
+  <:expr< ($str:n$, $expr_list_of_list _loc tl$) >>
+
+let meta_sum _loc fn ts =
+  let ts = List.map (meta_variant _loc fn) ts in
+  <:expr< T.Sum $expr_list_of_list _loc ts$ >>
+
+let meta_tuple _loc fn tl =
+  let tl = List.map fn tl in
+  <:expr< T.Tuple $expr_list_of_list _loc tl$ >>
 
 let gen tds =
   let _loc = loc_of_ctyp tds in
@@ -130,27 +163,18 @@ let gen tds =
     | Ext (v, t) -> <:expr< T.Ext $str:v$ $aux t$ >>
     | Unit       -> <:expr< T.Unit >>
     | Int None   -> <:expr< T.Int None >>
-    | Int (Some n) -> <:expr< T.Int (Some $`int:n$) >>
+    | Int(Some n)-> <:expr< T.Int (Some $`int:n$) >>
     | Float      -> <:expr< T.Float >>
     | Bool       -> <:expr< T.Bool >>
     | Char       -> <:expr< T.Char >>
     | String     -> <:expr< T.String >>
     | Option t   -> <:expr< T.Option $aux t$ >>
-    | Tuple tl   -> <:expr< T.Tuple $List.fold_left (fun accu x -> <:expr< [ $aux x$ :: $accu$ ] >>) <:expr< [] >> (List.rev tl)$ >>
+    | Tuple tl   -> meta_tuple _loc aux tl
     | List t     -> <:expr< T.List $aux t$ >>
     | Array t    -> <:expr< T.Array $aux t$ >>
-    | Sum ts     -> 
-      let rec fn accu = function
-      | []          -> accu
-      | (n, t) :: l -> <:expr< [ ( $str:n$, $List.fold_left (fun accu x -> <:expr< [ $aux x$ :: $accu$ ] >>) <:expr< [] >> (List.rev t)$ ) :: $fn accu l$ ] >> in
-      <:expr< T.Sum $fn <:expr< [] >> (List.rev ts)$ >>
-    | Dict ts    ->
-      let rec fn accu = function
-      | []              -> accu
-      | (n, `RW, t) :: l -> <:expr< [ ($str:n$, `RW, $aux t$) :: $fn accu l$ ] >>
-      | (n, `RO, t) :: l -> <:expr< [ ($str:n$, `RO, $aux t$) :: $fn accu l$ ] >> in
-      <:expr< T.Dict $fn <:expr< [] >> (List.rev ts)$ >>
-    | Arrow(t, s) -> <:expr< T.Arrow( $aux t$, $aux s$ ) >>
+    | Sum ts     -> meta_sum _loc aux ts
+    | Dict(t,ts) -> meta_dict _loc aux (t,ts)
+    | Arrow(t,s) -> <:expr< T.Arrow $aux t$ $aux s$ >>
     in
     <:binding< $lid:type_of name$ = let module T = Type in $aux t$ >>
   in
