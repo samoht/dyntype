@@ -86,8 +86,8 @@ let create tds : (loc * string * t) list =
     | <:ctyp< string >>       -> String
     | <:ctyp< option $ty$ >>  -> Option (aux bound_vars ty)
     | <:ctyp< ( $tup:tp$ ) >> -> Tuple (List.map (aux bound_vars) (list_of_ctyp tp []))
-    | <:ctyp< list $ctyp$ >>
-    | <:ctyp< array $ctyp$ >> -> Enum (aux bound_vars ctyp)
+    | <:ctyp< list $ctyp$ >>  -> List (aux bound_vars ctyp)
+    | <:ctyp< array $ctyp$ >> -> Array (aux bound_vars ctyp)
     | <:ctyp< [< $variants$ ] >> 
     | <:ctyp< [> $variants$ ] >>
     | <:ctyp< [= $variants$ ] >> 
@@ -137,7 +137,8 @@ let gen tds =
     | String     -> <:expr< T.String >>
     | Option t   -> <:expr< T.Option $aux t$ >>
     | Tuple tl   -> <:expr< T.Tuple $List.fold_left (fun accu x -> <:expr< [ $aux x$ :: $accu$ ] >>) <:expr< [] >> (List.rev tl)$ >>
-    | Enum t     -> <:expr< T.Enum $aux t$ >>
+    | List t     -> <:expr< T.List $aux t$ >>
+    | Array t    -> <:expr< T.Array $aux t$ >>
     | Sum ts     -> 
       let rec fn accu = function
       | []          -> accu

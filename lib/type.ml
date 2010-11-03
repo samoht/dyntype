@@ -20,7 +20,8 @@ open Printf
 type t =
   | Unit | Bool | Float | Char | String
   | Int of int option
-  | Enum of t
+  | List of t
+  | Array of t
   | Tuple of t list
   | Dict of (string * [`RW|`RO] * t) list
   | Sum of (string * t list) list
@@ -34,7 +35,8 @@ type t =
 let is_mutable t =
   let rec aux = function
     | Unit | Int _ | Bool | Float | Char | String -> false
-    | Enum t    -> aux t
+    | List t    -> aux t
+    | Array t   -> aux t
     | Tuple tl  -> List.exists aux tl
     | Dict tl   -> List.exists (fun (_,m,t) -> m = `RW || aux t) tl
     | Sum tl    -> List.exists (fun (_,tl) -> List.exists aux tl) tl
@@ -52,7 +54,8 @@ let free_vars t =
     | Var n when List.mem n accu
                 -> accu
     | Var n     -> n :: accu
-    | Enum t
+    | List t
+    | Array t
     | Option t  -> aux accu t
     | Tuple ts  -> List.fold_left aux accu ts
     | Dict ts   -> List.fold_left (fun accu (_,_,t) -> aux accu t) accu ts
@@ -74,7 +77,8 @@ let foreigns t =
     | Var n when List.mem n accu
                 -> accu
     | Var n     -> n :: accu
-    | Enum t
+    | List t
+    | Array t
     | Option t  -> aux accu t
     | Tuple ts  -> List.fold_left aux accu ts
     | Dict ts   -> List.fold_left (fun accu (_,_,t) -> aux accu t) accu ts
@@ -95,7 +99,8 @@ let unroll env t =
                  -> aux name (List.assoc n env)
     | Var _ | Unit | Int _ | Bool | Float | Char | String as t
                  -> t
-    | Enum t     -> Enum (aux name t)
+    | List t     -> List (aux name t)
+    | Array t    -> Array (aux name t)
     | Tuple tl   -> Tuple (List.map (aux name) tl)
     | Dict tl    -> Dict (List.map (fun (n, m, t) -> (n, m, aux name t)) tl)
     | Sum tl     -> Sum (List.map (fun (n, tl) -> (n, List.map (aux name) tl)) tl)
@@ -114,7 +119,8 @@ let rec to_string t = match t with
   | Float      -> "F"
   | Char       -> "C"
   | String     -> "S"
-  | Enum t     -> sprintf "[%s]" (to_string t)
+  | List t     -> sprintf "[%s]" (to_string t)
+  | Array t    -> sprintf "!%s?" (to_string t)
   | Tuple ts   -> sprintf "(%s)" (map_strings "*" to_string ts)
   | Dict ts    -> sprintf "{%s}" (map_strings "*" (fun (s,m,t) -> sprintf "%s:%s:%s" s (if m = `RO then "I" else "M") (to_string t)) ts)
   | Sum ts     -> sprintf "<%s>" (map_strings "*" (fun (s,t) -> sprintf "%s:(%s)" s (map_strings "*" to_string t)) ts)
@@ -147,7 +153,8 @@ let is_subtype_of (t1:t) (t2:t) =
       | Rec (n,tt) , Rec (m,ss) -> n = m && tt <: ss
       | Ext (n,tt) , Ext (m,ss) -> n = m && tt <: ss
       | Var v      , Var w      -> v = w
-      | Enum tt    , Enum ss    -> tt <: ss
+      | List tt    , List ss    -> tt <: ss
+      | Array tt   , Array ss   -> tt <: ss
       | Option tt  , Option ss  -> tt <: ss
       | Option tt  , _          -> tt <: s
       | Tuple ts   , Tuple ss   -> List.for_all2 (<:) ts ss
@@ -183,8 +190,8 @@ let index_par c s =
   let i = ref 0 in
   let n = String.length s in
   while !res = None && !i < n do
-    if s.[!i] = '(' || s.[!i] = '[' || s.[!i] = '{' || s.[!i] = '<' then incr par;
-    if s.[!i] = ')' || s.[!i] = ']' || s.[!i] = '}' || s.[!i] = '>' then decr par;
+    if s.[!i] = '(' || s.[!i] = '[' || s.[!i] = '{' || s.[!i] = '<' || s.[!i] = '!' then incr par;
+    if s.[!i] = ')' || s.[!i] = ']' || s.[!i] = '}' || s.[!i] = '>' || s.[!i] = '?' then decr par;
     if !par = 0 && s.[!i] = c then res := Some !i;
     incr i
   done;
@@ -222,7 +229,10 @@ let rec of_string s : t  = match s.[0] with
   | 'S' -> String
   | '[' ->
     let s = String.sub s 1 (String.length s - 2) in
-    Enum (of_string s)
+    List (of_string s)
+  | '!' ->
+    let s = String.sub s 1 (String.length s - 2) in
+    List (of_string s)
   | '(' ->
     let s = String.sub s 1 (String.length s - 2) in
     let ss = split_par '*' s in
