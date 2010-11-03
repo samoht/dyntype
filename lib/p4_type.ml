@@ -68,7 +68,7 @@ let append _loc modules id =
 
 let list_of_fields fn fields =
   let rec aux accu = function
-    | <:ctyp< $t1$; $t2$ >>             -> aux (aux accu t1) t2
+    | <:ctyp< $t1$; $t2$ >>             -> aux (aux accu t2) t1
     | <:ctyp< $lid:id$ : mutable $t$ >> -> (id, `RW, fn t) :: accu
     | <:ctyp< $lid:id$ : $t$ >>         -> (id, `RO, fn t) :: accu
     | _                                 -> failwith "unexpected AST" in
