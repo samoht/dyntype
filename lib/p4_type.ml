@@ -76,7 +76,7 @@ let list_of_fields fn fields =
 
 let list_of_sum fn variants =
   let rec aux accu = function
-    | <:ctyp< $t1$ | $t2$ >>     -> aux (aux accu t1) t2
+    | <:ctyp< $t1$ | $t2$ >>     -> aux (aux accu t2) t1
     | <:ctyp< `$uid:id$ of $t$ >>
     | <:ctyp< $uid:id$ of $t$ >> -> (id, List.map fn (list_of_ctyp t [])) :: accu
     | <:ctyp< `$uid:id$ >>
