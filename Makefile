@@ -25,3 +25,4 @@ reinstall:
 .PHONY: clean
 clean:
 	$(MAKE) -C lib/ clean
+	$(MAKE) -C lib_test/ clean
