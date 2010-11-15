@@ -1,5 +1,12 @@
+0.8.0:
+
+* Distinguish more types in Types.t [3 Nov 2010]
+* Put all the camlp4 utility functions in a separate file [3 Nov 2010]
+
 0.7.2:
 
+* Better error message when a type is not supported by dyntype [2 Nov 2010]
+* Fix issue with order of arguments in sum types (patch from W. Le Ferrand) [2 Nov 2010]
 * Improve the way to customize ID generation [18 May 2010]
 * Better support for missing values that map to option types [20 Apr 2010]
 
