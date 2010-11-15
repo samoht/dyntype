@@ -1,3 +1,7 @@
+0.8.1:
+
+* ocamlbuild support [15 Nov 2010]
+
 0.8.0:
 
 * Distinguish more types in Types.t [3 Nov 2010]

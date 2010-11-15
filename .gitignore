@@ -25,3 +25,5 @@ lib/p4_hash.ml
 lib/p4_hash.mli
 /Makefile.config
 run_test
+_build/*
+*~
