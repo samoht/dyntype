@@ -32,8 +32,8 @@ The type library converts an ML type definition annotated with the keyword `type
         | Option of t
         | Enum of t
         | Tuple of t list
-        | Dict of ( string * [`RW|`RO] * t ) list
-        | Sum of ( string * t list ) list
+        | Dict of [`R|`O] * ( string * [`RW|`RO] * t ) list
+        | Sum of [`P|`N] * ( string * t list ) list
         | Ext of string * t
         | Rec of string * t
         | Var of string
@@ -41,7 +41,7 @@ The type library converts an ML type definition annotated with the keyword `type
 
 This is a simpler representation than the full syntax exposed by `camlp4` (e.g. objects and records are coalesced into a `Dict` value).
 
-The basic types are similar to the usual OCaml basic types, i.e. `Bool`, `Float`, `Char` and `String`, which can be composed using `Arrow`. Integers have an additional bit-width range parameter that can be 31-, 32-, 63- or 64-bit depending on the exact OCaml type and host architecture, or unlimited for `BigInt` types.  These basic types can be composed to form either a `Tuple`, a record or an object with `Dict`, or a (polymorphic) variant with `Sum`.
+The basic types are similar to the usual OCaml basic types, i.e. `Bool`, `Float`, `Char` and `String`, which can be composed using `Arrow`. Integers have an additional bit-width range parameter that can be 31-, 32-, 63- or 64-bit depending on the exact OCaml type and host architecture, or unlimited for `BigInt` types.  These basic types can be composed to form either a `Tuple`, a record (`R) or an object (`O) with `Dict`, or a normal (`N) or polymorphic (`P) variant with `Sum`.
 
 For example, consider the following code fragment:
 
@@ -52,8 +52,8 @@ For example, consider the following code fragment:
 This fragment will generate the following additional values:
 
     let type_of_tuple = Ext ( "tuple", Tuple [ Int (Some 32); String ] )
-    let type_of_record = Ext ( "record", Dict [ ("foo", `RW, String) ] )
-    let type_of_variant = Ext ( "variant", Sum [ ("Foo", []) ; ("Bar", [Bool]) ] )
+    let type_of_record = Ext ( "record", Dict ( `R, [ ("foo", `RW, String) ]) )
+    let type_of_variant = Ext ( "variant", Sum (`N, [ ("Foo", []) ; ("Bar", [Bool]) ]) )
 
 Types variables are handled by induction on the type structure in which they are used.  Hence, the type definition...
 
@@ -76,8 +76,8 @@ The following example shows the automatically generated code for simple recursiv
     type t = { x : x } and x = { t : t } with type_of
 
     (* Auto-generated code *)
-    let type_of_t = Rec ( "t", Dict [ "x", Ext ( "x", Dict [ "t", Var "t"] ) ] )
-    let type_of_x = Rec ( "x", Dict [ "t", Ext ( "t", Dict [ "x", Var "x"] ) ] )
+    let type_of_t = Rec ( "t", Dict (`N, [ "x", Ext ( "x", Dict (`N, [ "t", Var "t"]) ) ]) )
+    let type_of_x = Rec ( "x", Dict (`N, [ "t", Ext ( "t", Dict (`N, [ "x", Var "x"]) ) ]) )
 
 Dynamic Values
 ==============
