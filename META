@@ -16,9 +16,16 @@ package "type" (
   archive(native) = "type.cmx"
 )
 
- package "syntax" (
+package "syntax" (
   name = "dyntype.syntax"
   description = "Syntax extension for type and value introspection"
   requires = "type-conv.syntax"
-  archive(syntax, preprocessor) = "dyntype.cma,pa_dyntype.cma"
+  archive(syntax, preprocessor) = "type.cmo,value.cmo,pa_dyntype.cma"
+)
+
+package "helpers" (
+  name = "dyntype.helpers"
+  description = "Camlp4 helper modules"
+  requires = "camlp4"
+  archive(syntax, preprocessor) = "p4_helpers.cmo"
 )
