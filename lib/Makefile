@@ -2,7 +2,7 @@ OCAMLMAKEFILE = ../OCamlMakefile
 ANNOTATE = yes
 
 SOURCES = value.ml p4_value.ml pa_value.ml type.ml p4_type.ml pa_type.ml
-PACKS = type-conv
+PACKS = type_conv
 RESULT = pa_dyntype
 USE_CAMLP4 = yes
 
