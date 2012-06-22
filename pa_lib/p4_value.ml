@@ -22,6 +22,7 @@ open Camlp4
 open PreCast
 open Ast
 open P4_helpers
+open Dyntype
 
 let value_of n = "value_of_" ^ n
 let of_value n = n ^ "_of_value"

@@ -1,31 +1,13 @@
 name = "dyntype"
 version = "0.8.1"
 description = "Dynamic type and value introspection"
-
-package "value" (
-  name = "dyntype.value"
-  description = "Dynamic value introspection"
-  archive(byte) = "value.cmo"
-  archive(native) = "value.cmx"
-)
-
-package "type" (
-  name = "dyntype.type-of"
-  description = "Dynamic type introspection"
-  archive(byte) = "type.cmo"
-  archive(native) = "type.cmx"
-)
+archives(byte) = "dyntype.cma"
+archives(native) = "dyntype.cmxa"
 
 package "syntax" (
   name = "dyntype.syntax"
   description = "Syntax extension for type and value introspection"
   requires = "type_conv"
-  archive(syntax, preprocessor) = "type.cmo,value.cmo,pa_dyntype.cma"
+  archive(syntax, preprocessor) = "pa_dyntype.cma"
 )
 
-package "helpers" (
-  name = "dyntype.helpers"
-  description = "Camlp4 helper modules"
-  requires = "camlp4"
-  archive(syntax, preprocessor) = "p4_helpers.cmo"
-)

@@ -22,7 +22,7 @@ open PreCast
 open Ast
 open P4_helpers
 
-open Type
+open Dyntype.Type
 
 let type_of t = "type_of_" ^ t
 
