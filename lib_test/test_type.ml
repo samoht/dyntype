@@ -1,6 +1,8 @@
 TYPE_CONV_PATH "Type"
 open Printf
 
+module M = struct type t = int with type_of end
+
 type i1 = int32
 and  i2 = int
 and  i3 = int64
@@ -13,7 +15,7 @@ and  p =
 and pp = [ `Poly1 | `Poly2 | `Poly3 of int ]
 
 and t = {
-  t1: int;
+  t1: M.t;
   mutable t2: string;
   t3: x
 } and x = {
