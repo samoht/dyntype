@@ -3,7 +3,7 @@ NAME      = dyntype
 PA_FILES  = p4_helpers p4_type p4_value pa_type pa_value
 LIB_FILES = type value
 
-INCLS = $(shell ocamlfind query type-conv.syntax -predicates syntax,preprocessor -r -format "-I %d %a")
+INCLS = $(shell ocamlfind query type_conv -predicates syntax,preprocessor -r -format "-I %d %a")
 
 ##########################################################
 NAME_FILES = _build/pa_lib/pa_$(NAME).cmxa \
@@ -29,6 +29,7 @@ all:
 
 
 install:
+	ocamlfind remove $(NAME) || true
 	ocamlfind install $(NAME) META $(FILES)
 
 uninstall:

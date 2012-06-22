@@ -19,7 +19,7 @@ package "type" (
 package "syntax" (
   name = "dyntype.syntax"
   description = "Syntax extension for type and value introspection"
-  requires = "type-conv.syntax"
+  requires = "type_conv"
   archive(syntax, preprocessor) = "type.cmo,value.cmo,pa_dyntype.cma"
 )
 
