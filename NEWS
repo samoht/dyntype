@@ -1,3 +1,7 @@
+0.7.3:
+
+* Fix build system to work with latest type_conv [22 Jun 2012]
+
 0.7.2:
 
 * Improve the way to customize ID generation [18 May 2010]
