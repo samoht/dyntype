@@ -1,5 +1,5 @@
 name = "dyntype"
-version = "0.8.3"
+version = "0.8.4dev"
 description = "Dynamic type and value introspection"
 archives(byte) = "dyntype.cma"
 archives(native) = "dyntype.cmxa"
