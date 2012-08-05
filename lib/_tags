@@ -1,2 +1,2 @@
 <*>: pkg_camp4,pkg_type_conv
-<*>: for-pack(Dyntype)
+<*.cmx> and not "dyntype.cmx": for-pack(Dyntype)
