@@ -1,8 +1,8 @@
 name = "dyntype"
 version = "0.8.4dev"
 description = "Dynamic type and value introspection"
-archives(byte) = "dyntype.cma"
-archives(native) = "dyntype.cmxa"
+archive(byte) = "dyntype.cma"
+archive(native) = "dyntype.cmxa"
 
 package "syntax" (
   name = "dyntype.syntax"

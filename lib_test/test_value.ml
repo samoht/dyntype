@@ -1,5 +1,3 @@
-TYPE_CONV_PATH "Value"
-
 type p =
 	| One of string * int array * char * bool * (float list)
 	| Two of t

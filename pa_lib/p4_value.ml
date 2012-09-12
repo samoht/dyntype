@@ -194,7 +194,7 @@ module Value_of = struct
 		let id, pid = new_id _loc in
 		<:binding< $lid:value_of_aux name$ =
 			fun ~id_seed -> fun __env__ -> fun $pid$ ->
-				let module V = Value in
+				let module V = Dyntype.Value in
 				$create names id ctyp$
 		>>
 
@@ -207,9 +207,9 @@ module Value_of = struct
 	let inputs _loc ~id_seed_t ~opt ids =
 		let value_of_fn x =
 			if opt then
-				<:patt< ($lid:value_of x$ : ?id_seed:$id_seed_t$ -> $lid:x$ -> Value.t) >>
+				<:patt< ($lid:value_of x$ : ?id_seed:$id_seed_t$ -> $lid:x$ -> Dyntype.Value.t) >>
 			else
-				<:patt< ($lid:value_of x$ : ~id_seed:$id_seed_t$ -> $lid:x$ -> Value.t) >> in
+				<:patt< ($lid:value_of x$ : ~id_seed:$id_seed_t$ -> $lid:x$ -> Dyntype.Value.t) >> in
 		let value_of_fns = List.map value_of_fn ids in
 		patt_tuple_of_list _loc value_of_fns
 
@@ -222,10 +222,10 @@ module Value_of = struct
 					let __id__ = $lid:gen_id x$ ~id_seed $xe$ in
 					let __env__ = $replace_env _loc ids <:expr< $xe$ >> x$ in
 					let __x__ = $lid:value_of_aux x$ ~id_seed __env__ $xe$ in
-					if List.mem ($str:x$, __id__) (Value.free_vars __x__) then
-						Value.Rec (($str:x$, __id__), __x__)
+					if List.mem ($str:x$, __id__) (Dyntype.Value.free_vars __x__) then
+						Dyntype.Value.Rec (($str:x$, __id__), __x__)
 					else
-						Value.Ext (($str:x$, $lid:gen_id x$ ~id_seed $xe$), __x__)
+						Dyntype.Value.Ext (($str:x$, $lid:gen_id x$ ~id_seed $xe$), __x__)
 			>> in
 			match id_seed with
 			| None   -> <:expr< fun ~id_seed -> $body$ >>
@@ -261,7 +261,7 @@ module Of_value = struct
 	let runtime_error id expected =
 		let _loc = Loc.ghost in
 		<:match_case<  __x__ -> do {
-			Printf.printf "Runtime error while parsing '%s': got '%s' while '%s' was expected\\n" $str_of_id id$ (Value.to_string __x__) $str:expected$;
+			Printf.printf "Runtime error while parsing '%s': got '%s' while '%s' was expected\\n" $str_of_id id$ (Dyntype.Value.to_string __x__) $str:expected$;
 			raise (Deps.Runtime_error($str:expected$, __x__)) }
 		>>
 
@@ -386,7 +386,7 @@ module Of_value = struct
 		let nid, npid = new_id _loc in
 		let nid2, npid2 = new_id _loc in
 		<:binding< $lid:of_value_aux name$ = fun __env__ -> fun $npid$ ->
-			let module V = Value in
+			let module V = Dyntype.Value in
 			match $nid$ with [
 			  V.Var (n, __id__) -> List.assoc __id__ __env__.Deps.$lid:name$
 			| V.Rec ((n, __id__), $npid2$ ) ->
@@ -409,7 +409,7 @@ module Of_value = struct
 		biAnd_of_list bindings
 
 	let inputs _loc ids =
-		let of_value_fns = List.map (fun x -> <:patt< ($lid:of_value x$ : Value.t -> $lid:x$) >>) ids in
+		let of_value_fns = List.map (fun x -> <:patt< ($lid:of_value x$ : Dyntype.Value.t -> $lid:x$) >>) ids in
 		patt_tuple_of_list _loc of_value_fns
 
 	let outputs _loc ids =
@@ -432,11 +432,9 @@ let gen ?(gen_id=Value_of.gen_id_default) ?(id_seed=Value_of.id_seed_default) td
 		value $Of_value.inputs _loc ids$ =
 			let module Deps = struct
 				type env = $Of_value.env_type _loc ids$;
-				exception Runtime_error of (string * Value.t);
+				exception Runtime_error of (string * Dyntype.Value.t);
 				exception Runtime_exn_error of (string * exn);
 			end in
 			let rec $Of_value.gen tds$ in
 			$Of_value.outputs _loc ids$;
 	>>
-
-

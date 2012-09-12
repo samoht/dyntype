@@ -188,7 +188,7 @@ let gen tds =
     | Dict(t,ts) -> meta_dict _loc aux (t,ts)
     | Arrow(t,s) -> <:expr< T.Arrow $aux t$ $aux s$ >>
     in
-    <:binding< $lid:type_of name$ = let module T = Type in $aux t$ >>
+    <:binding< $lid:type_of name$ = let module T = Dyntype.Type in $aux t$ >>
   in
   let bindings = List.map subst_external_var types in
   <:str_item< value $biAnd_of_list bindings$ >>

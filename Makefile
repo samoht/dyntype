@@ -3,7 +3,7 @@ NAME      = dyntype
 INCLS = $(shell ocamlfind query type_conv -predicates syntax,preprocessor -r -format "-I %d %a")
 
 BASE_FILES = _build/pa_lib/pa_dyntype _build/lib/dyntype
-FILES =  $(addsuffix .cmi,$(BASE_FILES)) $(addsuffix .cma,$(BASE_FILES)) $(addsuffix .cmxs,$(BASE_FILES)) $(addsuffix .a,$(BASE_FILES))
+FILES =  $(addsuffix .cmi,$(BASE_FILES)) $(addsuffix .cma,$(BASE_FILES)) $(addsuffix .cmxa,$(BASE_FILES)) $(addsuffix .a,$(BASE_FILES))
 
 all:
 	ocamlbuild $(NAME).cmxa $(NAME).cma

@@ -1,4 +1,3 @@
-TYPE_CONV_PATH "Type"
 open Printf
 
 module M = struct type t = int with type_of end
