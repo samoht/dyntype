@@ -1,32 +1,38 @@
-NAME      = dyntype
+# OASIS_START
+# DO NOT EDIT (digest: bc1e05bfc8b39b664f29dae8dbd3ebbb)
 
-INCLS = $(shell ocamlfind query type_conv -predicates syntax,preprocessor -r -format "-I %d %a")
+SETUP = ocaml setup.ml
 
-BASE_FILES = _build/pa_lib/pa_dyntype _build/lib/dyntype
-FILES =  $(addsuffix .cmi,$(BASE_FILES)) $(addsuffix .cma,$(BASE_FILES)) $(addsuffix .cmxa,$(BASE_FILES)) $(addsuffix .a,$(BASE_FILES))
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
 
-all:
-	ocamlbuild $(NAME).cmxa $(NAME).cma
-	ocamlbuild pa_$(NAME).cma pa_$(NAME).cmxs
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
 
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
 
-install:
-	ocamlfind remove $(NAME) || true
-	ocamlfind install $(NAME) META -optional $(FILES)
+all: 
+	$(SETUP) -all $(ALLFLAGS)
 
-uninstall:
-	ocamlfind remove $(NAME)
+install: setup.data
+	$(SETUP) -install $(INSTALLFLAGS)
 
-clean:
-	ocamlbuild -clean
-	rm -rf suite.byte
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
 
-.PHONY: test
-test:
-	ocamlbuild -pp "camlp4o $(INCLS) lib/$(NAME).cma pa_lib/pa_$(NAME).cma" suite.byte --
+reinstall: setup.data
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
 
-.PHONY: test_exp
-test_exp:
-	camlp4orf $(INCLS) _build/lib/$(NAME).cma _build/pa_lib/pa_$(NAME).cma lib_test/test_type.ml -printer o > _build/test_type_exp.ml
-	camlp4orf $(INCLS) _build/lib/$(NAME).cma _build/pa_lib/pa_$(NAME).cma lib_test/test_value.ml -printer o > _build/test_value_exp.ml
+clean: 
+	$(SETUP) -clean $(CLEANFLAGS)
 
+distclean: 
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
+
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+.PHONY: build doc test all install uninstall reinstall clean distclean configure
+
+# OASIS_STOP

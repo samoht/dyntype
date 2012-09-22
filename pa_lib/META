@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: 4c350d81afd0c049f3983ea375cd35db)
+version = "0.8.4"
+description = "Syntax extension for type and value introspection"
+requires = "type_conv"
+archive(byte) = "pa_dyntype.cma"
+archive(byte, plugin) = "pa_dyntype.cma"
+archive(native) = "pa_dyntype.cmxa"
+archive(native, plugin) = "pa_dyntype.cmxs"
+exists_if = "pa_dyntype.cmxa"
+# OASIS_STOP
+

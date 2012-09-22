@@ -1,0 +1,32 @@
+OASISFormat: 0.3
+Name:        dyntype
+Version:     0.8.4
+Synopsis:    `Dyntype` is a syntax extension which makes OCaml types and values easier to manipulate programmatically.
+Authors:     Anil Madhavapeddy, Thomas Gazagnaire
+License:     MIT
+LicenseFile: LICENSE
+Plugins:     DevFiles (0.3), META (0.3)
+
+Library dyntype
+    Path:               lib/
+    BuildTools:         ocamlbuild
+    BuildDepends:       type_conv
+    Modules:            Type, Value
+    CompiledObject:     native
+    Pack:               true
+    FindlibName:        dyntype
+    XMETAEnable:        true
+    XMETADescription:   Dynamic type and value introspection
+
+Library pa_dyntype
+    Path:               pa_lib/
+    BuildTools:         ocamlbuild
+    Modules:            P4_helpers, P4_type, P4_value, Pa_type, Pa_value
+    CompiledObject:     native
+    Pack:               true
+    BuildDepends:       camlp4, camlp4.quotations, type_conv, dyntype
+    FindlibParent:      dyntype
+    FindlibName:        syntax
+    XMETADescription:   Syntax extension for type and value introspection
+    XMETARequires:      type_conv
+
