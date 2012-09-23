@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: f9b851ba056d74befd7cb9329fb5c484) *)
+(* DO NOT EDIT (digest: a3aa9e17155afe08a10e9cf75084a8b8) *)
 module OASISGettext = struct
 (* # 21 "/opt/godi/build/apps/apps-oasis/work/oasis-0.3.0/src/oasis/OASISGettext.ml" *)
 
@@ -481,7 +481,7 @@ let package_default =
        [("dyntype", ["lib"]); ("pa_dyntype", ["pa_lib"])];
      lib_c = [];
      flags = [];
-     includes = [("pa_lib", ["lib"])];
+     includes = [("pa_lib", ["lib"]); ("lib_test", ["lib"; "pa_lib"])];
      }
   ;;
 
