@@ -82,6 +82,7 @@ and tu ()  = ( int (), f (), pp ())
 let o () : o = object method x = f () method y = string () method z = (fun i -> string () ^ string_of_int i) end
 
 let check n f g x =
+  let open Dyntype in
 	let v1 = f x in
 	let v2 = f (g v1) in
 	if not (v1 = v2) then begin
