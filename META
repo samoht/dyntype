@@ -3,11 +3,13 @@ version = "0.8.5"
 description = "Dynamic type and value introspection"
 archive(byte) = "dyntype.cma"
 archive(native) = "dyntype.cmxa"
-
+archive(byte,plugin) = "dyntype.cma"
+archive(native,plugin) = "dyntype.cmxs"
 package "syntax" (
   name = "dyntype.syntax"
   description = "Syntax extension for type and value introspection"
   requires = "type_conv"
   archive(syntax, preprocessor) = "pa_dyntype.cma"
+  archive(syntax, toploop) = "pa_dyntype.cma"
 )
 

@@ -1,3 +1,7 @@
+0.8.4:
+
+* Add support for dyntype in the toplevel [29 Sep 2012]
+
 0.8.3:
 
 * Fixes for compilation under ocaml-4.00.0 (#1) [5 Aug 2012]
