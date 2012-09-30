@@ -27,6 +27,7 @@ test:
 
 .PHONY: test_exp
 test_exp:
+	camlp4orf $(INCLS) _build/lib/$(NAME).cma _build/pa_lib/pa_$(NAME).cma lib_test/simple_value.ml -printer o > _build/test_type_exp.ml
 	camlp4orf $(INCLS) _build/lib/$(NAME).cma _build/pa_lib/pa_$(NAME).cma lib_test/test_type.ml -printer o > _build/test_type_exp.ml
 	camlp4orf $(INCLS) _build/lib/$(NAME).cma _build/pa_lib/pa_$(NAME).cma lib_test/test_value.ml -printer o > _build/test_value_exp.ml
 
