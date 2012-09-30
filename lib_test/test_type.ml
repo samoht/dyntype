@@ -1,4 +1,5 @@
 open Printf
+open Dyntype
 
 module M = struct type t = int with type_of end
 

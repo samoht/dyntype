@@ -1,12 +1,13 @@
-0.8.4:
+0.8.5:
 
 * Add support for dyntype in the toplevel [29 Sep 2012]
+* Fix test suite compilation [29 Sep 2012]
 
-0.8.3:
+0.8.4:
 
 * Fixes for compilation under ocaml-4.00.0 (#1) [5 Aug 2012]
 
-0.8.2:
+0.8.3:
 
 * Only install the packed Dyntype and Pa_dyntype files [22 Jun 2012]
 * Build fixes for type-conv-3.x [22 Jun 2012]
