@@ -5,9 +5,9 @@ Installation
 
 You can download the latest distribution from Github at <http://github.com/mirage/dyntype>.  It depends on:
 
-* `ocaml`: 3.11.0+ is required for the latest `camlp4` extension. Earlier versions will definitely not work.
+* `ocaml`: 3.12.1+ is required for the latest `camlp4` extension. Earlier versions will definitely not work.
 
-* `type-conv`: available from <http://www.ocaml.info/home/ocaml_sources.html>
+* `type-conv`: available from <https://ocaml.janestreet.com>, version 108.07.00 or higher.
 
 The library installs an ocamlfind META file, so use it with the `dyntype.syntax` package.  To compile a file `foo.ml` with Dyntype and findlib, do:
 
@@ -18,6 +18,8 @@ To link it into a standalone executable:
     ocamlfind ocamlopt -syntax camlp4o -linkpkg -package dyntype.syntax t.ml
 
 You can report issues using the Github issue tracker at <http://github.com/mirage/dyntype/issues>, or mail the authors at <mailto:mirage@recoil.org>.  If you use Dyntype somewhere, feel free to drop us a short line and we can add your project to the Wiki as well.
+
+We recommend you install Dyntype using the OPAM package manager, available at <http://opam.ocamlpro.com>.
 
 Dynamic Types
 =============

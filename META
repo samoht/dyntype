@@ -1,5 +1,5 @@
 name = "dyntype"
-version = "0.8.5"
+version = "0.9.0"
 description = "Dynamic type and value introspection"
 archive(byte) = "dyntype.cma"
 archive(native) = "dyntype.cmxa"
@@ -12,4 +12,3 @@ package "syntax" (
   archive(syntax, preprocessor) = "pa_dyntype.cma"
   archive(syntax, toploop) = "pa_dyntype.cma"
 )
-
