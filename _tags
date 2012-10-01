@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: aff326e13fdb188f76323258f6f1637d)
+# DO NOT EDIT (digest: 17b203030e36f4413e8c2a2ab238b2c7)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -30,17 +30,11 @@
 <pa_lib/*.ml{,i}>: pkg_camlp4
 <pa_lib/*.ml{,i}>: pkg_camlp4.quotations
 # Executable suite
-"lib_test/suite.byte": use_pa_dyntype
 "lib_test/suite.byte": use_dyntype
 "lib_test/suite.byte": pkg_oUnit
 "lib_test/suite.byte": pkg_type_conv
-"lib_test/suite.byte": pkg_camlp4
-"lib_test/suite.byte": pkg_camlp4.quotations
-<lib_test/*.ml{,i}>: use_pa_dyntype
 <lib_test/*.ml{,i}>: use_dyntype
 <lib_test/*.ml{,i}>: pkg_oUnit
 <lib_test/*.ml{,i}>: pkg_type_conv
-<lib_test/*.ml{,i}>: pkg_camlp4
-<lib_test/*.ml{,i}>: pkg_camlp4.quotations
 # OASIS_STOP
 <**/*.ml{,i}>: syntax_camlp4o

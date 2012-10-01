@@ -38,7 +38,7 @@ Executable "suite"
     Path:               lib_test/
     Install:            false
     MainIs:             suite.ml
-    BuildDepends:       oUnit, dyntype, dyntype.syntax, type_conv
+    BuildDepends:       oUnit, dyntype, type_conv
 
 Test core
     Run$:               flag(tests)

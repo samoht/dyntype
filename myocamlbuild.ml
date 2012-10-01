@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 71e92af414b4fa568b9f6699efca25ac) *)
+(* DO NOT EDIT (digest: cd27d1904e2a31d98f2badf0b91b9a83) *)
 module OASISGettext = struct
 # 21 "/Users/avsm/.opam/system/build/oasis.0.3.0/src/oasis/OASISGettext.ml"
 
@@ -481,7 +481,7 @@ let package_default =
        [("dyntype", ["lib"]); ("pa_dyntype", ["pa_lib"])];
      lib_c = [];
      flags = [];
-     includes = [("pa_lib", ["lib"]); ("lib_test", ["lib"; "pa_lib"])];
+     includes = [("pa_lib", ["lib"]); ("lib_test", ["lib"])];
      }
   ;;
 
