@@ -25,7 +25,7 @@ open Pa_type_conv
 
 let _ =
   add_generator "type_of"
-    (fun tds ->
+    (fun _ tds ->
       let _loc = loc_of_ctyp tds in
        <:str_item<
            $P4_type.gen tds$;
