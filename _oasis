@@ -1,18 +1,15 @@
 OASISFormat:    0.3
 Name:           dyntype
-Version:        0.8.4
+Version:        0.9.1
 Synopsis:       `Dyntype` is a syntax extension which makes OCaml types and values easier to manipulate programmatically.
 Authors:        Anil Madhavapeddy,
                 Thomas Gazagnaire
 License:        MIT
 LicenseFile:    LICENSE
-Plugins:        DevFiles (0.3),
-                META (0.3)
+Plugins:        META (0.3)
 BuildTools:     ocamlbuild, camlp4o
 FilesAB:            lib_test/_tags.ab
 PostConfCommand:    ./post_conf.sh
-
-
 
 Library dyntype
     Path:               lib/
