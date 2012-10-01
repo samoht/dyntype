@@ -204,11 +204,7 @@ module Value_of = struct
     biAnd_of_list bindings
 
   let inputs _loc ~id_seed_t ~opt ids =
-    let value_of_fn x =
-      if opt then
-        <:patt< ($lid:value_of x$ : ?id_seed:$id_seed_t$ -> $lid:x$ -> Dyntype.Value.t) >>
-      else
-        <:patt< ($lid:value_of x$ : ~id_seed:$id_seed_t$ -> $lid:x$ -> Dyntype.Value.t) >> in
+    let value_of_fn x = <:patt< $lid:value_of x$ >> in
     let value_of_fns = List.map value_of_fn ids in
     patt_tuple_of_list _loc value_of_fns
 
@@ -408,7 +404,7 @@ module Of_value = struct
     biAnd_of_list bindings
 
   let inputs _loc ids =
-    let of_value_fns = List.map (fun x -> <:patt< ($lid:of_value x$ : Dyntype.Value.t -> $lid:x$) >>) ids in
+    let of_value_fns = List.map (fun x -> <:patt< $lid:of_value x$ >>) ids in
     patt_tuple_of_list _loc of_value_fns
 
   let outputs _loc ids =
