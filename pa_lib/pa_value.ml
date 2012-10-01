@@ -24,6 +24,6 @@ open Ast
 open Pa_type_conv
 
 let _ =
-	add_generator "value" (fun _ tds ->
-		let _loc = loc_of_ctyp tds in
-		<:str_item< $P4_value.gen tds$ >>)
+  add_generator "value" (fun _ tds ->
+    let _loc = loc_of_ctyp tds in
+    <:str_item< $P4_value.gen tds$ >>)

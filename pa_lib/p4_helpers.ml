@@ -19,23 +19,23 @@ open Camlp4.PreCast
 open Ast
 
 let expr_list_of_list _loc exprs =
-	match List.rev exprs with
-	| []   -> <:expr< [] >>
-	| h::t ->
+  match List.rev exprs with
+  | []   -> <:expr< [] >>
+  | h::t ->
     List.fold_left (fun accu x -> <:expr< [ $x$ :: $accu$ ] >>) <:expr< [ $h$ ] >> t 
 
 let patt_list_of_list _loc patts =
-	match List.rev patts with
-	| []   -> <:patt< [] >>
-	| h::t ->
+  match List.rev patts with
+  | []   -> <:patt< [] >>
+  | h::t ->
     List.fold_left (fun accu x -> <:patt< [ $x$ :: $accu$ ] >>) <:patt< [ $h$ ] >> t
 
 let expr_tuple_of_list _loc = function
-	| []   -> <:expr< >>
-	| [x]  -> x
-	| h::t -> ExTup (_loc, List.fold_left (fun accu n -> <:expr< $accu$, $n$ >>) h t)
+  | []   -> <:expr< >>
+  | [x]  -> x
+  | h::t -> ExTup (_loc, List.fold_left (fun accu n -> <:expr< $accu$, $n$ >>) h t)
 
 let patt_tuple_of_list _loc = function
-	| []   -> <:patt< >>
-	| [x]  -> x
-	| h::t -> PaTup (_loc, List.fold_left (fun accu n -> <:patt< $accu$, $n$ >>) h t)
+  | []   -> <:patt< >>
+  | [x]  -> x
+  | h::t -> PaTup (_loc, List.fold_left (fun accu n -> <:patt< $accu$, $n$ >>) h t)

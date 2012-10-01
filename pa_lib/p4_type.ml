@@ -125,7 +125,7 @@ let create tds : (loc * string * t) list =
       Sum (kind, list_of_sum same_aux variants)
     | <:ctyp< { $fields$ } >> -> Dict (`R, list_of_fields same_aux fields)
     | <:ctyp< < $fields$ > >> -> Dict (`O, list_of_fields same_aux fields)
-	  | <:ctyp< $t$ -> $u$ >>   -> Arrow (same_aux t, same_aux u)
+    | <:ctyp< $t$ -> $u$ >>   -> Arrow (same_aux t, same_aux u)
     | <:ctyp< $lid:id$ >> when not (exists id) || List.mem id bound_vars
                               -> Var id
     | <:ctyp< $lid:id$ >>     -> apply id (id :: bound_vars)

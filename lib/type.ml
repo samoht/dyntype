@@ -68,7 +68,7 @@ let free_vars t =
 
 (* Get all the type variables defined inside a type *)
 let foreigns t =
-	let rec aux accu = function
+  let rec aux accu = function
     | Ext (n,t)
     | Rec (n,t) when List.mem n accu
                 -> aux accu t
@@ -105,7 +105,7 @@ let unroll env t =
     | Dict(t,tl) -> Dict (t,List.map (fun (n, m, t) -> (n, m, aux name t)) tl)
     | Sum (t,tl) -> Sum (t,List.map (fun (n, tl) -> (n, List.map (aux name) tl)) tl)
     | Option t   -> Option (aux name t)
-	| Arrow(s,t) -> Arrow (aux name s, aux name t) in
+    | Arrow(s,t) -> Arrow (aux name s, aux name t) in
   match t with
   | Rec (n, s) | Ext (n, s) -> let ss = aux n s in if List.mem n (free_vars ss) then Rec (n, ss) else Ext (n, ss)
   | _                       -> t
