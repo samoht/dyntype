@@ -1,6 +1,7 @@
 .PHONY: all clean install build
 all: build doc
 
+J ?= 2
 PREFIX ?= /usr/local
 NAME=dyntype
 
@@ -12,7 +13,7 @@ setup.data: setup.bin
 	./setup.bin -configure --prefix $(PREFIX) --enable-tests
 
 build: setup.data setup.bin
-	./setup.bin -build
+	./setup.bin -build -j $(J)
 
 doc: setup.data setup.bin
 	./setup.bin -doc
