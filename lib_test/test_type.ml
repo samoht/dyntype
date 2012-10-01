@@ -38,6 +38,7 @@ type o =
 open OUnit
 
 let (<=>) n t =
+  let open Dyntype in
   let ts = Type.to_string t in
   printf "%s: %s\n%!" n ts;
   printf "%s: %s\n%!" n (Type.to_string (Type.of_string ts));
