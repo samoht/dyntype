@@ -7,7 +7,7 @@ You can download the latest distribution from Github at <http://github.com/mirag
 
 * `ocaml`: 3.12.1+ is required for the latest `camlp4` extension. Earlier versions will definitely not work.
 
-* `type-conv`: available from <https://ocaml.janestreet.com>, version 108.07.00 or higher.
+* `type-conv`: available from <https://ocaml.janestreet.com>, version 108.07.00 or higher.  If you have an older version of `type-conv`, please downgrade to dyntype-0.8.5 instead of this version.
 
 The library installs an ocamlfind META file, so use it with the `dyntype.syntax` package.  To compile a file `foo.ml` with Dyntype and findlib, do:
 
