@@ -1,3 +1,7 @@
+0.9.1:
+
+* Switch build system to OASIS (Paolo Donadeo)  [1 Oct 2012]
+
 0.9.0:
 
 * Support (and require) type_conv-108.07.00+ [1 Oct 2012]
@@ -29,7 +33,7 @@
 0.7.2:
 
 * Better error message when a type is not supported by dyntype [2 Nov 2010]
-* Fix issue with order of arguments in sum types (patch from W. Le Ferrand) [2 Nov 2010]
+* Fix issue with order of arguments in sum types (from W. Le Ferrand) [2 Nov 2010]
 * Improve the way to customize ID generation [18 May 2010]
 * Better support for missing values that map to option types [20 Apr 2010]
 

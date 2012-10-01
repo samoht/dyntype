@@ -1,6 +1,6 @@
 # OASIS_START
-# DO NOT EDIT (digest: 4f878f33c6b47f5227dd3320e5cd91e1)
-version = "0.8.4"
+# DO NOT EDIT (digest: c8771a712b0f9cec7c3c126f7fed5085)
+version = "0.9.1"
 description = "Dynamic type and value introspection"
 requires = "type_conv"
 archive(byte) = "dyntype.cma"
@@ -9,7 +9,7 @@ archive(native) = "dyntype.cmxa"
 archive(native, plugin) = "dyntype.cmxs"
 exists_if = "dyntype.cmxa"
 package "syntax" (
- version = "0.8.4"
+ version = "0.9.1"
  description = "Syntax extension for type and value introspection"
  requires = "type_conv"
  archive(syntax, preprocessor) = "pa_dyntype.cma"
