@@ -1,0 +1,36 @@
+0.9.1 (Oct 2012):
+* Switch build system to OASIS (Paolo Donadeo)
+
+0.9.0 (Oct 2012):
+* Support (and require) type_conv-108.07.00+
+* Generate simpler p4_value top-level bindings
+
+0.8.5 (Sep 2012):
+* Add support for dyntype in the toplevel
+* Fix test suite compilation
+
+0.8.4 (Aug 2012):
+* Fixes for compilation under ocaml-4.00.0
+
+0.8.3 (Jun 2012):
+* Only install the packed `Dyntype` and `Pa_dyntype` files
+* Build fixes for type-conv-3.x
+
+0.8.1 (Nov 2010):
+* ocamlbuild support
+
+0.8.0 (Nov 2010):
+* Distinguish more types in `Types.t`
+* Put all the camlp4 utility functions in a separate file
+
+0.7.2 (Nov 2010):
+* Better error message when a type is not supported by dyntype
+* Fix issue with order of arguments in sum types (from W. Le Ferrand)
+* Improve the way to customize ID generation
+* Better support for missing values that map to option types
+
+0.7.1 (Feb 2010):
+* Build fixes for some UNIX shells
+
+0.7 (Feb 2010):
+* Initial public release
